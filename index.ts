@@ -21,4 +21,18 @@ client.on("channelDelete", async (channel) => {
   }
 });
 
+client.on("roleDelete", async (role) => {
+  const guild = client.guilds.cache.get(guild_id);
+  const channelDeleteLogs = await guild.fetchAuditLogs({
+    type: "ROLE_DELETE",
+  });
+  const log = channelDeleteLogs.entries.find(
+    (log) => log.target.id === role.id
+  );
+  if (log) {
+    const member = await guild.members.fetch(log.executor.id);
+    await member.ban({ reason: "Deleted a channel" });
+  }
+});
+
 client.login(token);
