@@ -1,4 +1,6 @@
-import { Client, Intents } from "discord.js";
+import { Client, Intents, NonThreadGuildBasedChannel } from "discord.js";
+import { config } from "dotenv";
+config();
 const token = process.env["DISCORD_TOKEN"];
 const guild_id = process.env["GUILD_ID"];
 
@@ -17,7 +19,13 @@ client.on("channelDelete", async (channel) => {
   );
   if (log) {
     const member = await guild.members.fetch(log.executor.id);
-    await member.ban({ reason: "Deleted a channel" });
+    console.log(
+      "banning",
+      member.displayName,
+      "for deleting the channel",
+      (channel as NonThreadGuildBasedChannel).name
+    );
+    // await member.ban({ reason: "Deleted a channel" });
   }
 });
 
@@ -31,7 +39,13 @@ client.on("roleDelete", async (role) => {
   );
   if (log) {
     const member = await guild.members.fetch(log.executor.id);
-    await member.ban({ reason: "Deleted a channel" });
+    console.log(
+      "banning",
+      member.displayName,
+      "for deleting the role",
+      role.name
+    );
+    // await member.ban({ reason: "Deleted a channel" });
   }
 });
 
